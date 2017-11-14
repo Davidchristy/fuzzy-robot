@@ -15,6 +15,7 @@ class VerbHandler(http.server.BaseHTTPRequestHandler):
             result = {
                 '/PhoneOn': control.phoneOn,
                 '/PhoneOff': control.phoneOff,
+                '/PhoneHeartbeat': control.heartbeat,
                 }[path]()
 
             # Out the results back to the server
