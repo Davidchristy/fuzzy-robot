@@ -1,0 +1,6 @@
+[Server Config]
+PORT=5000
+
+[API Keys]
+# Wit.ai keys are 32-character uppercase alphanumeric strings
+WIT_AI_KEY=################################
