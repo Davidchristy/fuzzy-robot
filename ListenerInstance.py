@@ -5,9 +5,9 @@ import speech_recognition as sr
 
 class ListenerThread(threading.Thread):
 
-    def __init__(self):
+    def __init__(self,parent):
         threading.Thread.__init__(self)
-        # self.args = args
+        self.parent = parent
         return
 
     def run(self):
@@ -31,9 +31,9 @@ class ListenerThread(threading.Thread):
             except sr.RequestError as e:
                 print("Sphinx error; {0}".format(e))
 
-            WIT_AI_KEY = "2OGCNXZSHWGD6V6LKO2JS73MAOJXHCYR"  # Wit.ai keys are 32-character uppercase alphanumeric strings
+            WIT_AI_KEY = self.parent.config["API Keys"]["WIT_AI_KEY"]
             try:
-                print("Wit.ai thinks you said: \"{}\"".format(r.recognize_wit(audio, key=WIT_AI_KEY)))
+                print("Wit.ai thinks you said: \"{}\"".format(r.recognize_wit(audio, key=)))
             except sr.UnknownValueError:
                 print("Wit.ai could not understand audio")
             except sr.RequestError as e:
