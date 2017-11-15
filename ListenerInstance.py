@@ -1,4 +1,5 @@
 import time, threading
+import requests
 
 import speech_recognition as sr
 # https://pypi.python.org/pypi/SpeechRecognition/
@@ -23,22 +24,22 @@ class ListenerThread(threading.Thread):
                 r.adjust_for_ambient_noise(source)
                 print("energy_threshold: {}".format(r.energy_threshold))
                 audio = r.listen(source)
-            try:
-                print("We heard something!")
-                print("Sphinx thinks you said: \"{}\"".format(r.recognize_sphinx(audio)))
-            except sr.UnknownValueError:
-                print("Sphinx could not understand audio")
-            except sr.RequestError as e:
-                print("Sphinx error; {0}".format(e))
 
             WIT_AI_KEY = self.parent.config["API Keys"]["WIT_AI_KEY"]
             try:
-                print("Wit.ai thinks you said: \"{}\"".format(r.recognize_wit(audio, key=)))
+                text = r.recognize_wit(audio, key=WIT_AI_KEY)
+                print("Wit.ai thinks you said: \"{}\"".format(text))
             except sr.UnknownValueError:
                 print("Wit.ai could not understand audio")
+                continue
             except sr.RequestError as e:
                 print("Could not request results from Wit.ai service; {0}".format(e))
+                continue
 
+            if "lights" in text and "on" in text:
+                IFTTT_MAKER_KEY = self.parent.config["API Keys"]["IFTTT_MAKER_KEY"]
+                url = "https://maker.ifttt.com/trigger/light_on/with/key/{}".format(IFTTT_MAKER_KEY)
+                r = requests.post(url) 
 
 
             # print("I'm listening, why aren't you talking?")
